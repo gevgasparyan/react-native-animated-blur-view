@@ -1,18 +1,27 @@
-import * as React from 'react';
+import React, { useRef, useEffect } from "react";
 
-import { StyleSheet, View, Text } from 'react-native';
-import { multiply } from 'react-native-animated-blur-view';
+import { StyleSheet, View, Text } from "react-native";
+import AnimatedBlurView, {
+  AnimatedBlurViewMethods,
+} from "react-native-animated-blur-view";
 
 export default function App() {
-  const [result, setResult] = React.useState<number | undefined>();
+  const blurViewRef = useRef<AnimatedBlurViewMethods>();
 
-  React.useEffect(() => {
-    multiply(3, 7).then(setResult);
+  useEffect(() => {
+    blurViewRef.current?.start(true);
   }, []);
 
   return (
     <View style={styles.container}>
-      <Text>Result: {result}</Text>
+      <Text>React Native Animated Blur View</Text>
+      <AnimatedBlurView
+        ref={blurViewRef}
+        style={StyleSheet.absoluteFillObject}
+        blurStart={10}
+        blurEnd={20}
+        animationDuration={200}
+      />
     </View>
   );
 }
@@ -20,12 +29,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  box: {
-    width: 60,
-    height: 60,
-    marginVertical: 20,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
