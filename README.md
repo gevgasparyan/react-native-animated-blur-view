@@ -1,6 +1,8 @@
 # react-native-animated-blur-view
 
-Animated blur effect of the view
+React Native Animated Blur component
+
+https://www.npmjs.com/package/react-native-animated-blur-view
 
 ## Installation
 
@@ -36,12 +38,16 @@ export default function App() {
 
 **Props:**
 
-- **`blurStart`**: number. Blur effect start amount.
-- **`blurEnd`**: number. Blur effect end amount.
-- **`animationDuration`**: number. Animation duration in seconds.
-- **`style`**: optional. View style of the component.
+- **`blurStart`**: number (required). Blur effect start amount.
+- **`blurEnd`**: number (required). Blur effect end amount.
+- **`animationDuration`**: number (required). Animation duration in seconds.
+- **`gradient`**: boolean (optional). Add gradient effect. Default is false.
+- **`style`**: StyleProp (optional). View style of the component.
+- **`animationType`**: string (optional). Blur Animation type. One of `ease`, `linear`, `ease-in`, `ease-out`, `ease-in-out`, `cubic-bezier(n,n,n,n)`. Default is `ease`.
+- **`extraStyles`**: string (optional). Add extra css styles to blur component.
 
-## `start(show: boolean, cb: () => void)` lower level imperative API
+## Imperative API
+## `start(show: boolean, cb: () => void)`
 
 ```js
 ref.current?.start(true, () => console.log('Finished'));
@@ -56,6 +62,11 @@ ref.current?.reset(true);
 ```
 
 Will stop animation and set blurStart/blurEnd amount.
+
+##
+
+
+![example_animation](https://github.com/gevgasparyan/react-native-animated-blur-view/assets/13519034/4f60f146-7c06-4cad-b049-6e55be72609d)
 
 
 ## Contributing

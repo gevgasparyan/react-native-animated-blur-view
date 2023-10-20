@@ -1,7 +1,7 @@
 {
   "name": "react-native-animated-blur-view",
-  "version": "0.1.1",
-  "description": "Animated blur effect of the view",
+  "version": "0.1.2",
+  "description": "React Native Animated Blur component",
   "main": "src/index",
   "types": "src/index.d.ts",
   "react-native": "src/index",
@@ -37,9 +37,10 @@
     "android",
     "blur",
     "blur view",
+    "animate",
     "animated",
     "animate blur view",
-    "gradient blur"
+    "gradient"
   ],
   "repository": "https://github.com/gevgasparyan/react-native-animated-blur-view",
   "author": "Gevorg Gasparyan <gevorg.gasparian@gmail.com> (https://github.com/gevgasparyan)",

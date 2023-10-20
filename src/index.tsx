@@ -9,12 +9,22 @@ import { StyleProp, View, ViewStyle } from "react-native";
 import { StyleSheet } from "react-native";
 import WebView from "react-native-webview";
 
+export type AnimationType =
+  | "ease" // - Specifies an animation with a slow start, then fast, then end slowly (this is default)
+  | "linear" // - Specifies an animation with the same speed from start to end
+  | "ease-in" // - Specifies an animation with a slow start
+  | "ease-out" // - Specifies an animation with a slow end
+  | "ease-in-out" // - Specifies an animation with a slow start and end
+  | "cubic-bezier(n,n,n,n)"; // - Lets you define your own values in a cubic-bezier function
+
 export type Props = {
   blurStart: number;
   blurEnd: number;
   animationDuration: number;
   style?: StyleProp<ViewStyle>;
   gradient?: boolean;
+  animationType?: AnimationType;
+  extraStyles?: string;
 };
 
 export interface AnimatedBlurViewMethods {
@@ -23,63 +33,78 @@ export interface AnimatedBlurViewMethods {
 }
 
 const STYLE = `
-      position: absolute;
-      bottom: 0px;
-      left: 0px;
-      top: 0px;
-      right: 0px;
-      background-color: rgba(0, 0, 0, 0);
-    `;
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  top: 0px;
+  right: 0px;
+  background-color: rgba(0, 0, 0, 0);
+`;
 
 const GRADIENT_STYLE = `
-      position: absolute;
-      bottom: 0px;
-      left: 0px;
-      top: 0px;
-      right: 0px;
-      background-color: rgba(0, 0, 0, 0);
-      -webkit-mask: linear-gradient(#000, #000, transparent);
-      mask: linear-gradient(#000, #000, transparent);
-    `;
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  top: 0px;
+  right: 0px;
+  background-color: rgba(0, 0, 0, 0);
+  -webkit-mask: linear-gradient(#000, #000, transparent);
+  mask: linear-gradient(#000, #000, transparent);
+`;
 
 const AnimatedBlurView: ForwardRefRenderFunction<
   AnimatedBlurViewMethods,
   Props
-> = ({ style, blurStart, blurEnd, gradient, animationDuration }, ref) => {
-  const [extraStyles, setExtraStyles] = useState(`
-        -webkit-backdrop-filter: blur(${blurStart}px);
-        backdrop-filter: blur(${blurStart}px);
-      `);
+> = (
+  {
+    style,
+    blurStart,
+    blurEnd,
+    gradient,
+    animationDuration,
+    animationType,
+    extraStyles,
+  },
+  ref
+) => {
+  const [cssStyles, setCssStyles] = useState(`
+    -webkit-backdrop-filter: blur(${blurStart}px);
+    backdrop-filter: blur(${blurStart}px);
+  `);
   const blurStates = useMemo(() => {
     return {
       visibleAnimate: `
-            -webkit-backdrop-filter: blur(${blurEnd}px);
-            backdrop-filter: blur(${blurEnd}px);
-            animation: backdrop-filter-animation ${animationDuration}s ease;
-          `,
+        -webkit-backdrop-filter: blur(${blurEnd}px);
+        backdrop-filter: blur(${blurEnd}px);
+        animation: backdrop-filter-animation ${animationDuration}s ${
+        animationType ?? "ease"
+      };
+      `,
       hiddenAnimate: `
-            -webkit-backdrop-filter: blur(${blurStart}px);
-            backdrop-filter: blur(${blurStart}px);
-            animation: backdrop-filter-animation ${animationDuration}s ease;
-            animation-direction: reverse;
-          `,
+        -webkit-backdrop-filter: blur(${blurStart}px);
+        backdrop-filter: blur(${blurStart}px);
+        animation: backdrop-filter-animation ${animationDuration}s ${
+        animationType ?? "ease"
+      };
+        animation-direction: reverse;
+      `,
       visible: `
-            -webkit-backdrop-filter: blur(${blurEnd}px);
-            backdrop-filter: blur(${blurEnd}px);
-          `,
+        -webkit-backdrop-filter: blur(${blurEnd}px);
+        backdrop-filter: blur(${blurEnd}px);
+      `,
       hidden: `
-            -webkit-backdrop-filter: blur(${blurStart}px);
-            backdrop-filter: blur(${blurStart}px);
-          `,
+        -webkit-backdrop-filter: blur(${blurStart}px);
+        backdrop-filter: blur(${blurStart}px);
+      `,
     };
-  }, [blurStart, blurEnd, animationDuration]);
+  }, [blurStart, blurEnd, animationDuration, animationType]);
 
   useImperativeHandle(
     ref,
     () => {
       return {
         start: (show: boolean, cb?: () => void) => {
-          setExtraStyles(
+          setCssStyles(
             show ? blurStates.visibleAnimate : blurStates.hiddenAnimate
           );
           setTimeout(() => {
@@ -87,7 +112,7 @@ const AnimatedBlurView: ForwardRefRenderFunction<
           }, animationDuration * 1000);
         },
         reset: (show: boolean) => {
-          setExtraStyles(
+          setCssStyles(
             show ? blurStates.visibleAnimate : blurStates.hiddenAnimate
           );
         },
@@ -101,24 +126,25 @@ const AnimatedBlurView: ForwardRefRenderFunction<
       <WebView
         source={{
           html: `
-                  <style>
-                    div {
-                      ${gradient ? GRADIENT_STYLE : STYLE}
-                      ${extraStyles};
-                    }
-                    @keyframes backdrop-filter-animation {
-                      from {
-                         backdrop-filter: blur(${blurStart}px);
-                         -webkit-backdrop-filter: blur(${blurStart}px);
-                      }
-                      to {
-                         backdrop-filter: blur(${blurEnd}px);
-                         -webkit-backdrop-filter: blur(${blurEnd}px);
-                      }
-                    }
-                  </style>
-                  <div />
-                `,
+              <style>
+                div {
+                  ${gradient ? GRADIENT_STYLE : STYLE}
+                  ${cssStyles};
+                  ${extraStyles}
+                }
+                @keyframes backdrop-filter-animation {
+                  from {
+                     backdrop-filter: blur(${blurStart}px);
+                     -webkit-backdrop-filter: blur(${blurStart}px);
+                  }
+                  to {
+                     backdrop-filter: blur(${blurEnd}px);
+                     -webkit-backdrop-filter: blur(${blurEnd}px);
+                  }
+                }
+              </style>
+              <div />
+            `,
         }}
         style={styles.webView}
       />
