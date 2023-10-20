@@ -65,8 +65,7 @@ Will stop animation and set blurStart/blurEnd amount.
 
 ##
 
-
-![example_animation](https://github.com/gevgasparyan/react-native-animated-blur-view/assets/13519034/4f60f146-7c06-4cad-b049-6e55be72609d)
+ <img width="360" alt="devmenu" src="https://github.com/gevgasparyan/react-native-animated-blur-view/assets/13519034/4f60f146-7c06-4cad-b049-6e55be72609d">
 
 
 ## Contributing
