@@ -10,6 +10,9 @@ https://www.npmjs.com/package/react-native-animated-blur-view
 npm install react-native-animated-blur-view
 ```
 
+# THIS LIBRARY DOES NOT WORK ON ANDROID
+
+
 ## Usage
 
 ```js
@@ -55,13 +58,22 @@ ref.current?.start(true, () => console.log('Finished'));
 
 Animates blur view from blurStart amount to blurEnd amount in given animation duration.
 
-## `reset(show: boolean)` lower level imperative API
+## `reset(show: boolean)`
 
 ```js
 ref.current?.reset(true);
 ```
 
 Will stop animation and set blurStart/blurEnd amount.
+
+
+## `setBlurAmount(amount: number)`
+
+```js
+ref.current?.setBlurAmount(10);
+```
+
+Will set given blur amount without animation.
 
 ##
 

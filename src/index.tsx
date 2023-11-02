@@ -112,9 +112,14 @@ const AnimatedBlurView: ForwardRefRenderFunction<
           }, animationDuration * 1000);
         },
         reset: (show: boolean) => {
-          setCssStyles(
-            show ? blurStates.visibleAnimate : blurStates.hiddenAnimate
-          );
+          setCssStyles(show ? blurStates.visible : blurStates.hidden);
+        },
+        setBlurAmount: (amount: number) => {
+          const blurrness = `
+            -webkit-backdrop-filter: blur(${amount}px);
+            backdrop-filter: blur(${amount}px);
+          `;
+          setCssStyles(blurrness);
         },
       };
     },
